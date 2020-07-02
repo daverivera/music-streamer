@@ -1,11 +1,13 @@
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const path = require('path')
 const fileSystem = require('fs')
 
 const port = 3000
 
-app.get('/track', (req, res) => {
+app.use(cors())
+app.get('/track/:id', (req, res) => {
   // generate file path
   const filePath = path.resolve(__dirname, './private', './ninja.mp3')
   // get file size info
@@ -22,6 +24,6 @@ app.get('/track', (req, res) => {
   readStream.pipe(res)
 })
 
-app.use(express.static(path.resolve(__dirname, 'src/my-app/build')))
+//app.use(express.static(path.resolve(__dirname, 'src/my-app/build')))
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

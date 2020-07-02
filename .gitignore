@@ -18,7 +18,7 @@ node_modules/
 .env.test
 
 
-
+server/private/*
 
 # TernJS port file
 .tern-port
