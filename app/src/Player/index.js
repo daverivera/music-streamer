@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Howl, Howler } from 'howler';
 import axios from 'axios'
 
+import Slider from './children/Slider'
+
 const Player = () => {
     const [song, setSong] = useState(null)
     const [pause, setPause] = useState(null)
@@ -17,6 +19,10 @@ const Player = () => {
         return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
     }
 
+    const handleSeek = (percentage) => {
+        song.seek(song.duration() * (percentage / 100))
+    }
+
     const step = () => {
         const seek = song.seek() || 0
         const progress = (((seek / song.duration()) * 100) || 0)
@@ -24,11 +30,9 @@ const Player = () => {
         setCurrentTime(formatTime(seek))
         setSongProgress(progress)
 
-        // If the sound is still playing, continue stepping.
         if (song.playing()) {
             requestAnimationFrame(step)
         }
-
     }
 
     useEffect(() => {
@@ -65,6 +69,7 @@ const Player = () => {
         <div>
             <p>{currentTime} - {duration}</p>
             <p>{songProgress}%</p>
+            <Slider value={songProgress} onSeek={handleSeek} />
             <button onClick={onPlay}>{ pause ? 'pause' : 'play' }</button>
             <button onClick={onStop}>stop</button>
         </div>
