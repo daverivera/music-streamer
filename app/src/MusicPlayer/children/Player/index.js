@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Howl, Howler } from 'howler';
+import PropTypes from 'prop-types'
+import { Howl, Howler } from 'howler'
 import axios from 'axios'
 
 import Slider from './children/Slider'
 
-const Player = () => {
+const Player = ({ currentSong }) => {
     const [song, setSong] = useState(null)
     const [pause, setPause] = useState(null)
     const [duration, setDuration] = useState(null)
@@ -21,6 +22,7 @@ const Player = () => {
 
     const handleSeek = (percentage) => {
         song.seek(song.duration() * (percentage / 100))
+        step()
     }
 
     const step = () => {
@@ -36,14 +38,16 @@ const Player = () => {
     }
 
     useEffect(() => {
-        const url = 'http://localhost:3000/track/ninja.mp3'
+        if (!currentSong) return
+
+        const url = `http://localhost:3000/songs/${currentSong}`
         const song = new Howl({
             src: url,
             onload: () => setDuration(formatTime(song.duration()))
         })
 
         setSong(song)
-    }, [])
+    }, [currentSong])
 
     const onPlay = () => {
         requestAnimationFrame(step)
@@ -68,12 +72,15 @@ const Player = () => {
     return (
         <div>
             <p>{currentTime} - {duration}</p>
-            <p>{songProgress}%</p>
-            <Slider value={songProgress} onSeek={handleSeek} />
+            <Slider currentTime={currentTime} value={songProgress} onSeek={handleSeek} />
             <button onClick={onPlay}>{ pause ? 'pause' : 'play' }</button>
             <button onClick={onStop}>stop</button>
         </div>
     )
+}
+
+Player.propTypes = {
+    currentSong: PropTypes.string
 }
 
 export default Player

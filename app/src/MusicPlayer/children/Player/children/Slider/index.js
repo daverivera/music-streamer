@@ -19,8 +19,9 @@ ValueLabelComponent.propTypes = {
   value: PropTypes.number.isRequired,
 }
 
-const Slider = ({ value = 0, onSeek }) => {
+const Slider = ({ currentTime, value = 0, onSeek }) => {
     const onSeekWrapper = (_, value) => onSeek(value)
+
     return (
         <div style={{ margin: '0 15px' }}>
             <MaterialSlider
